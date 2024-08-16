@@ -6,4 +6,3 @@ COPY ${JAR_FILE} /app/app.jar
 
 # 애플리케이션 실행
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-
