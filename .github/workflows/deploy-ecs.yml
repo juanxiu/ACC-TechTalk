@@ -44,6 +44,12 @@ jobs:
           cd ./acc-techtalk
           ./gradlew build
 
+      - name: List build/libs contents
+        run: |
+          cd acc-techtalk
+          ls -la build/libs
+
+
       
 
   deploy:
