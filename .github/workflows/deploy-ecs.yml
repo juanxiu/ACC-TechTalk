@@ -44,13 +44,7 @@ jobs:
           cd ./acc-techtalk
           ./gradlew build
 
-      - name: Publish to GitHub Packages
-        run: |
-          cd ./acc-techtalk
-          ./gradlew publish
-        env:
-          USERNAME: ${{ github.actor }}
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
 
   deploy:
     runs-on: ubuntu-latest
