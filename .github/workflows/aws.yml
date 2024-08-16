@@ -40,10 +40,14 @@ jobs:
           gradle-version: '7.0'
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: 
+          cd ./acc-techtalk
+          ./gradlew build
 
       - name: Publish to GitHub Packages
-        run: ./gradlew publish
+        run: 
+          cd ./acc-techtalk
+          ./gradlew publish
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
