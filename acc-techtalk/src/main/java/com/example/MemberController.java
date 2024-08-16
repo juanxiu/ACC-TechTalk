@@ -1,4 +1,4 @@
-package ACC.acc_techtalk;
+package com.example;
 
 
 import org.springframework.ui.Model;

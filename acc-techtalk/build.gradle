@@ -5,11 +5,11 @@ plugins {
 	id 'application'
 }
 application{
-	mainClassName = 'com.example.AccTechtalkApplication'
+	mainClassName = 'com.example.AccTechtalkApplication' // 패키지 경로 확인.
 }
 
-group = 'ACC'
-version = '0.0.1-SNAPSHOT'
+group 'com.example'
+version '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
