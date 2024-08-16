@@ -40,12 +40,12 @@ jobs:
           gradle-version: '7.0'
 
       - name: Build with Gradle
-        run: 
+        run: |
           cd ./acc-techtalk
           ./gradlew build
 
       - name: Publish to GitHub Packages
-        run: 
+        run: |
           cd ./acc-techtalk
           ./gradlew publish
         env:
