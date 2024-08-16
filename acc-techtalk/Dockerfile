@@ -1,10 +1,8 @@
 FROM openjdk:17-jdk-slim
 
-# JAR 파일을 지정된 경로로 복사
-ARG JAR_FILE=build/libs/acc-techtalk-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} app.jar
-
 WORKDIR /app
 
-# 애플리케이션 실행
+COPY build/libs/*.jar app.jar
+EXPOSE 8080
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
