@@ -9,10 +9,10 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-  ECS_SERVICE: ${{ secrets.ECS_SERVICE }}
-  ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
-  ECS_TASK_DEFINITION: ${{ secrets.ECS_TASK_DEFINITION }}
-  CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
+  ECS_SERVICE: techtalk-service-2
+  ECS_CLUSTER: techtalk-prac-cluster
+  ECS_TASK_DEFINITION: task-2
+  CONTAINER_NAME: techtalk-container-2
 
 permissions:
   contents: read
@@ -99,18 +99,33 @@ jobs:
           docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
 
-      - name: Deploy Amazon ECS task definition
+      - name: Read ECS Task Definition JSON
+        id: read-task-def
+        run: |
+          task_def=$(cat task-2-revision1.json)
+          echo "task-definition=${task_def}" >> $GITHUB_OUTPUT
+
+      - name: Fill in the new image ID in the task definition
+        id: replace-image
+        run: |
+          task_def=$(echo ${{ steps.read-task-def.outputs.task-definition }} | jq --arg IMAGE "${{ steps.build-image.outputs.image }}" '.containerDefinitions[0].image = $IMAGE')
+          echo "${task_def}" > new-task-def.json
+
+      - name: Register updated task definition
+        id: register-task-def
+        run: |
+          aws ecs register-task-definition \
+            --cli-input-json file://new-task-def.json
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ env.AWS_REGION }}
+
+      - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          task-definition: ${{ steps.register-task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
