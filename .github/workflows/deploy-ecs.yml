@@ -107,14 +107,14 @@ jobs:
       - name: Cache PhysicalTheraphy build directory
         uses: actions/cache@v3
         with:
-          path: ./
-          key: ${{ runner.os }}-physicaltheraphy-build-cache-${{ steps.short-sha.outputs.sha }}
+          path: ./acc-techtalk
+          key: ${{ runner.os }}-build-cache-
 
       - name: Restore Gradle cache directory
         uses: actions/cache@v3
         with:
-          path: ./
-          key: ${{ runner.os }}-physicaltheraphy-build-cache-${{ steps.short-sha.outputs.sha }}
+          path: ./acc-techtalk
+          key: ${{ runner.os }}-build-cache-
 
 
 
