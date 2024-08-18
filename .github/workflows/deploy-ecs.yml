@@ -19,8 +19,11 @@ permissions:
   deployments: write
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  
 
     steps:
       - name: Checkout code
@@ -49,15 +52,7 @@ jobs:
           cd acc-techtalk
           ls -la build/libs
 
-
-      
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    steps:
+    
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -69,8 +64,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+      
 
       - name: List directory contents
         run: |
