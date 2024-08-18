@@ -85,6 +85,18 @@ jobs:
           cd acc-techtalk
           ls -la build/libs
 
+      - name: Cache PhysicalTheraphy build directory
+        uses: actions/cache@v3
+        with:
+          path: ./
+          key: ${{ runner.os }}-physicaltheraphy-build-cache-${{ steps.short-sha.outputs.sha }}
+
+      - name: Restore Gradle cache directory
+        uses: actions/cache@v3
+        with:
+          path: ./
+          key: ${{ runner.os }}-physicaltheraphy-build-cache-${{ steps.short-sha.outputs.sha }}
+
 
 
       - name: Build, tag, and push image to Amazon ECR
