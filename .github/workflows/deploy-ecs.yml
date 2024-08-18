@@ -51,6 +51,9 @@ jobs:
           
       - name: Cache physicaltherapy build directory
         uses: actions/cache@v3
+        with:
+          path: ./acc-techtalk
+          key: ${{ runner.os }}-build-cache-
 
   deploy:
     name: Deploy
@@ -77,6 +80,9 @@ jobs:
 
       - name: Restore Gradle cache directory
         uses: actions/cache@v3
+        with:
+          path: ./acc-techtalk
+          key: ${{ runner.os }}-build-cache-
 
       - name: List directory contents
         run: |
