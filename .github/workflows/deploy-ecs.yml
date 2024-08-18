@@ -19,11 +19,9 @@ permissions:
   deployments: write
 
 jobs:
-  deploy:
+  build-jar:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
   
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -50,6 +48,20 @@ jobs:
         run: |
           cd acc-techtalk
           ls -la build/libs
+          
+      - name: Cache physicaltherapy build directory
+        uses: actions/cache@v3
+
+  deploy:
+    name: Deploy
+    needs:
+      - build-jar
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
     
       - name: Configure AWS credentials
@@ -63,7 +75,8 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      
+      - name: Restore Gradle cache directory
+        uses: actions/cache@v3
 
       - name: List directory contents
         run: |
